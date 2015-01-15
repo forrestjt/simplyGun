@@ -33,6 +33,24 @@ function start(){
     mark.log(ship);
   });
 
+  /*
+  sjs.keyUp(RIGHT_KEY, function(){
+    ship.pushRight();
+    mark.log(ship);
+  });
+  sjs.keyUp(LEFT_KEY, function(){
+    ship.pushLeft();
+    mark.log(ship);
+  });
+  sjs.keyUp(UP_KEY, function(){
+    ship.pushUp();
+    mark.log(ship);
+  });
+  sjs.keyUp(DOWN_KEY, function(){
+    ship.pushDown();
+    mark.log(ship);
+  });*/
+
   mark.log = function(ship){
     //console.log.apply(console, arguments);
     gun.path('players.' + ship.gid).set({sx: ship.sx, sy: ship.sy});
@@ -41,10 +59,10 @@ function start(){
   gun.path('players').on(function(){
     gun.path('players').map(function(player, gid){
       if(mark.entity[gid]){ return }
-      console.log('player joined', gid, player);
+      //console.log('player joined', gid, player);
       mark.entity[gid] = new sjs.Image('img/fighter1.png', 150, 100);
       this.on(function(play){
-        console.log('player moving', gid, play);
+        //console.log('player moving', gid, play);
         mark.entity[gid].sx = play.sx;
         mark.entity[gid].sy = play.sy;
       })
