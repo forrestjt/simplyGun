@@ -6,11 +6,14 @@ function start(){
   var mark = window.mark = {entity:{}}, ship;
 
   var join = new sjs.Button("Join Game", function(){
-    var id = "players_" + Gun.roulette();
-    gun.path(id).set({x:0, y:0});
+    var gid = Gun.roulette();
+    var set = {};
+    set[gid] = {sx: 0, sy: 0};
+    ship = window.ship = mark.entity[gid] = new sjs.Image('img/fighter1.png', 150, 100);
+    ship.gid = gid;
 
-    ship = mark.entity[id] = new sjs.Image('img/fighter1.png', 150, 100);
-    ship.gid = id;
+    ship.sync = gun.path('players').set(set); //gun.path('players').path(id).set({x:0, y:0});
+
   }).bottom().right();
 
   sjs.keyDown(RIGHT_KEY, function(){
@@ -29,9 +32,22 @@ function start(){
     ship.pushDown();
     mark.log(ship);
   });
-  mark.log = function(){ console.log.apply(console, arguments) }
-  gun.on(function(game){
-    console.log("WE HAVE NEW PLAYERS!!!", game);
 
+  mark.log = function(ship){
+    //console.log.apply(console, arguments);
+    gun.path('players.' + ship.gid).set({sx: ship.sx, sy: ship.sy});
+  }
+
+  gun.path('players').on(function(){
+    gun.path('players').map(function(player, gid){
+      if(mark.entity[gid]){ return }
+      console.log('player joined', gid, player);
+      mark.entity[gid] = new sjs.Image('img/fighter1.png', 150, 100);
+      this.on(function(play){
+        console.log('player moving', gid, play);
+        mark.entity[gid].sx = play.sx;
+        mark.entity[gid].sy = play.sy;
+      })
+    });
   });
 }

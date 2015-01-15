@@ -18,7 +18,9 @@ app.use(express.static(__dirname)).listen(port);
 
 gun.load("game").blank(function(){
 	console.log("Initializing Game!");
-	gun.set({title: "simplyGun", players: {'banana': {x: -5, y: -5}, 'kiwi': {x: -4, y: -3}}}).key("game");
+	gun.set({title: "simplyGun",
+		players: {} // {'banana': {x: -5, y: -5}, 'kiwi': {x: -4, y: -3}}
+	}).key("game");
 });
 
 console.log('Server started on port ' + port + ' with /gun');
