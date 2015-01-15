@@ -3,9 +3,10 @@ function start(){
   var gun = window.gun = Gun(location + 'gun').load("game");
   sjs.open("target", 1000, 700);
   var bg = new sjs.Image('img/bg.png', 1000, 700);
-  var mark = window.mark = {entity:{}}, ship;
+  var mark = window.mark = {entity:{}}, ship, count=0;
 
   var join = new sjs.Button("Join Game", function(){
+    join.hide();
     var gid = Gun.roulette();
     var set = {};
     set[gid] = {sx: 0, sy: 0};
@@ -33,27 +34,10 @@ function start(){
     mark.log(ship);
   });
 
-  /*
-  sjs.keyUp(RIGHT_KEY, function(){
-    ship.pushRight();
-    mark.log(ship);
-  });
-  sjs.keyUp(LEFT_KEY, function(){
-    ship.pushLeft();
-    mark.log(ship);
-  });
-  sjs.keyUp(UP_KEY, function(){
-    ship.pushUp();
-    mark.log(ship);
-  });
-  sjs.keyUp(DOWN_KEY, function(){
-    ship.pushDown();
-    mark.log(ship);
-  });*/
-
+  
   mark.log = function(ship){
-    //console.log.apply(console, arguments);
-    gun.path('players.' + ship.gid).set({sx: ship.sx, sy: ship.sy});
+    gun.path('players.' + ship.gid).set({x: (count==0?ship.x:null), y: (count==0?ship.y:null), sx: ship.sx, sy: ship.sy});
+    if(count++>10)count=0;
   }
 
   gun.path('players').on(function(){
@@ -65,6 +49,8 @@ function start(){
         //console.log('player moving', gid, play);
         mark.entity[gid].sx = play.sx;
         mark.entity[gid].sy = play.sy;
+        if(play.y)mark.entity[gid].y = play.y;
+        if(play.x)mark.entity[gid].x = play.x;
       })
     });
   });
