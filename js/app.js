@@ -1,7 +1,8 @@
 // app.js
 function start(){
-  sjs.open();
-  var ship = new sjs.Image('img/fighter1.png', 150, 100);
+  sjs.open("target", 1000, 700);
+  var bg = new sjs.Image('img/bg.png', 1000, 700);
+  var ship = new sjs.Image('img/fighter1.png', 100, 70);
   sjs.keyDown(RIGHT_KEY, function(){ 
      ship.pushRight();
   });
