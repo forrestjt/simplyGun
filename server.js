@@ -6,8 +6,9 @@ var express = require('express');
 var app = express();
 
 var Gun = require('gun/gun');
-var wsp = require('gun/lib/wsp');
-var file = require('gun/lib/file');
+require('gun/lib/wsp');
+require('gun/lib/file');
+require('./lib/gun.map');
 var gun = Gun({
 	file: 'state.json'
 });
@@ -16,7 +17,8 @@ gun.attach(app);
 app.use(express.static(__dirname)).listen(port);
 
 gun.load("game").blank(function(){
-	gun.set({title: "simplyGun", players: {}}).key("game");
+	console.log("Initializing Game!");
+	gun.set({title: "simplyGun", players: {'banana': {x: -5, y: -5}, 'kiwi': {x: -4, y: -3}}}).key("game");
 });
 
 console.log('Server started on port ' + port + ' with /gun');
