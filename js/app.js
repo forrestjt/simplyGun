@@ -1,10 +1,22 @@
 // app.js
 function start(){
-  var gun = window.gun = Gun(location + 'gun').load("game");
+  var sg = window.sg = {};
+  sg.inup = function(i){
+    console.log(i);
+  }
+
   sjs.open("target", 1000, 700);
   var bg = new sjs.Image('img/bg.png', 1000, 700);
+  sjs.makeStage("login");
+  var login = new sjs.Button("Log In", function(){
+    sjs.setStage("default");
+  }).center();
+
+  var gun = window.gun = Gun(location + 'gun').load("game");
   var mark = window.mark = {entity:{}}, ship;
 
+
+  /*
   var join = new sjs.Button("Join Game", function(){
     join.hide();
     var gid = Gun.roulette();
@@ -16,6 +28,7 @@ function start(){
     ship.sync = gun.path('players').set(set); //gun.path('players').path(id).set({x:0, y:0});
 
   }).bottom().right();
+  */
 
   sjs.keyDown(RIGHT_KEY, function(){
      ship.pushRight();
@@ -34,7 +47,7 @@ function start(){
     mark.log(ship);
   });
 
-  
+
   mark.log = function(ship){
     gun.path('players.' + ship.gid).set({x: ship.x, y: ship.y, sx: ship.sx, sy: ship.sy});
   }
@@ -43,7 +56,11 @@ function start(){
     gun.path('players').map(function(player, gid){
       if(mark.entity[gid]){ return }
       //console.log('player joined', gid, player);
+      var stage = sjs.stage;
+      sjs.setStage('default');
       mark.entity[gid] = new sjs.Image('img/fighter1.png', 150, 100);
+      sjs.setStage(stage);
+
       this.on(function(play){
         //console.log('player moving', gid, play);
         mark.entity[gid].sx = play.sx;
