@@ -5,8 +5,8 @@ function start(){
     console.log(i);
   }
 
-  sjs.open("target", 1000, 700);
-  var bg = new sjs.Image('img/bg.png', 1000, 700);
+  sjs.open("target");
+  var bg = new sjs.Image('img/bg.png', sjs.width, sjs.height);
   sjs.makeStage("login");
   var login = new sjs.Button("Log In", function(){
     sjs.setStage("default");
