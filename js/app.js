@@ -3,7 +3,7 @@ function start(){
   var gun = window.gun = Gun(location + 'gun').load("game");
   sjs.open("target", 1000, 700);
   var bg = new sjs.Image('img/bg.png', 1000, 700);
-  var mark = window.mark = {entity:{}}, ship, count=0;
+  var mark = window.mark = {entity:{}}, ship;
 
   var join = new sjs.Button("Join Game", function(){
     join.hide();
@@ -36,8 +36,7 @@ function start(){
 
   
   mark.log = function(ship){
-    gun.path('players.' + ship.gid).set({x: (count==0?ship.x:null), y: (count==0?ship.y:null), sx: ship.sx, sy: ship.sy});
-    if(count++>10)count=0;
+    gun.path('players.' + ship.gid).set({x: ship.x, y: ship.y, sx: ship.sx, sy: ship.sy});
   }
 
   gun.path('players').on(function(){

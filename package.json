@@ -1,13 +1,14 @@
-{ "name": "simplyGun"
-	, "version": "0.1.0"
-	, "author": "Forrest Tait and Mark Nadal"
-	, "description": "Video Game!"
-	, "engines": {
-		"node": "~>0.6.6"
-	}
-	, "SimplyJS": "1.0"
-	, "dependencies": {
-		"gun": "0.0.x"
-		,"express": "4.11.0"
-	}
+{
+  "name": "simplyGun",
+  "version": "0.1.0",
+  "author": "Forrest Tait and Mark Nadal",
+  "description": "Video Game!",
+  "engines": {
+    "node": "~>0.6.6"
+  },
+  "SimplyJS": "1.0",
+  "dependencies": {
+    "express": "4.11.0",
+    "gun": "0.0.9-e"
+  }
 }
