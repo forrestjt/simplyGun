@@ -1,72 +1,101 @@
 // app.js
 function start(){
-  var sg = window.sg = {};
+  var sg = window.sg = {objects: {}};
+  sg.me = {};
+  sg.gun = Gun(location + 'gun');
+  var game = window.game = sg.gun.load("game");
   sg.inup = function(i){
-    console.log(i);
+    var form = $(i);
+    var username = sg.me.username = form.find('.username').val();
+    var password = sg.me.password = form.find('.password').val();
+
+    console.log(username, password);
+
+    sg.gun.load('username/' + username).blank(function(){ // this only gets called if the username doesn't exist.
+      sg.gun.set({username: username }) // registering the user!
+        .key("username/" + username)
+        .key('checkpassword/' + username + '/' + password);
+      alert("Registered! Please Re-Log-In");
+
+      //window.location = window.location;
+    }).get(function(val){
+      sg.gun.load('checkpassword/' + username + '/' + password).blank(function(){
+        alert("wrong password or user already taken");
+      }).get(function(user){
+        alert("you logged in!");
+        joinGame(user);
+      });
+    });
   }
 
   sjs.open("target");
   var bg = new sjs.Image('img/bg.png', sjs.width, sjs.height);
+  sjs.keyDown(RIGHT_KEY, function(){
+    sg.me.ship.pushRight();
+    sg.update(sg.me.ship);
+  });
+  sjs.keyDown(LEFT_KEY, function(){
+    sg.me.ship.pushLeft();
+    sg.update(sg.me.ship);
+  });
+  sjs.keyDown(UP_KEY, function(){
+    sg.me.ship.pushUp();
+    sg.update(sg.me.ship);
+  });
+  sjs.keyDown(DOWN_KEY, function(){
+    sg.me.ship.pushDown();
+    sg.update(sg.me.ship);
+  });
+
   sjs.makeStage("login");
   var login = new sjs.Button("Log In", function(){
     sjs.setStage("default");
   }).center();
 
-  var gun = window.gun = Gun(location + 'gun').load("game");
-  var mark = window.mark = {entity:{}}, ship;
+  function joinGame(user){
+    $("#interface").hide();
+    sjs.setStage('default');
 
+    user = user || {};
+    user.x = user.x || 0;
+    user.y = user.y || 0;
+    user.sx = user.sx || 0;
+    user.sy = user.sy || 0;
 
-  /*
-  var join = new sjs.Button("Join Game", function(){
-    join.hide();
-    var gid = Gun.roulette();
     var set = {};
-    set[gid] = {sx: 0, sy: 0};
-    ship = window.ship = mark.entity[gid] = new sjs.Image('img/fighter1.png', 150, 100);
-    ship.gid = gid;
+    set[sg.me.username] = user;
 
-    ship.sync = gun.path('players').set(set); //gun.path('players').path(id).set({x:0, y:0});
+    if(sg.objects[sg.me.username]){
+      sg.me.ship = window.ship = sg.objects[sg.me.username];
+    } else {
+      sg.me.ship = window.ship = sg.objects[sg.me.username] = new sjs.Image('img/fighter1.png', 150, 100);
+    }
 
-  }).bottom().right();
-  */
+    sg.gun.load('username/' + sg.me.username).set(user);
+    game.path('players').set(set);
 
-  sjs.keyDown(RIGHT_KEY, function(){
-     ship.pushRight();
-     mark.log(ship);
-  });
-  sjs.keyDown(LEFT_KEY, function(){
-     ship.pushLeft();
-     mark.log(ship);
-  });
-  sjs.keyDown(UP_KEY, function(){
-     ship.pushUp();
-     mark.log(ship);
-  });
-  sjs.keyDown(DOWN_KEY, function(){
-    ship.pushDown();
-    mark.log(ship);
-  });
+  };
 
-
-  mark.log = function(ship){
-    gun.path('players.' + ship.gid).set({x: ship.x, y: ship.y, sx: ship.sx, sy: ship.sy});
+  sg.update = function(ship){
+    game.path('players.' + sg.me.username).set({x: ship.x, y: ship.y, sx: ship.sx, sy: ship.sy});
   }
 
-  gun.path('players').on(function(){
-    gun.path('players').map(function(player, gid){
-      if(mark.entity[gid]){ return }
-      //console.log('player joined', gid, player);
+  game.path('players').on(function(){
+    game.path('players').map(function(player, username){
+      if(sg.objects[username]){ return }
+      console.log('player joined', username, player);
+
       var stage = sjs.stage;
       sjs.setStage('default');
-      mark.entity[gid] = new sjs.Image('img/fighter1.png', 150, 100);
+      sg.objects[username] = new sjs.Image('img/fighter1.png', 150, 100);
       sjs.setStage(stage);
 
       this.on(function(play){
         //console.log('player moving', gid, play);
-        mark.entity[gid].sx = play.sx;
-        mark.entity[gid].sy = play.sy;
-        if(play.y)mark.entity[gid].y = play.y;
-        if(play.x)mark.entity[gid].x = play.x;
+        sg.objects[username].sx = play.sx;
+        sg.objects[username].sy = play.sy;
+        if(play.y) sg.objects[username].y = play.y;
+        if(play.x) sg.objects[username].x = play.x;
       })
     });
   });

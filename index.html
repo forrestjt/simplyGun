@@ -14,8 +14,8 @@
     <div id="target">
       <div id="interface">
         <form id="login" onsubmit="sg.inup(this);return false;">
-          Username: <input> <br>
-          Password: <input type='password'> <br>
+          Username: <input class="username"> <br>
+          Password: <input class="password" type='password'> <br>
           <span class="error"></span>
           <button>Log In</button>
           <button>Register</button>
@@ -23,6 +23,7 @@
       </div>
     </div>
 
+    <script src="js/jquery.js"></script>
     <script src="lib/simply.js"></script>
     <script src="node_modules/gun/gun.js"></script>
     <script src="lib/gun.map.js"></script>
